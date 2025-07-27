@@ -1,7 +1,20 @@
+import { headers } from 'next/headers';
 import Image from 'next/image';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import logo from '@/assets/logo-without-background.png';
-export default function Signup() {
+import { authClient } from '@/utils/auth-client';
+export default async function Signup() {
+  const session = await authClient.getSession({
+    fetchOptions: {
+      headers: await headers(),
+    },
+  });
+
+  if (session.data) {
+    redirect('/');
+  }
+
   return (
     <main className="flex w-[800px] flex-col rounded-lg bg-[#fff] py-5">
       <header className="mb-2 flex items-center gap-3 pt-5 pl-5">

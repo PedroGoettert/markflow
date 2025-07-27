@@ -1,10 +1,23 @@
+import { headers } from 'next/headers';
 import Image from 'next/image';
 import Link from 'next/link';
-import { FaFacebook, FaGoogle } from 'react-icons/fa';
+import { redirect } from 'next/navigation';
 import logo from '@/assets/logo-without-background.png';
 import { Row } from '@/components/Row';
+import { SocialLoginComponent } from '@/components/socialLogin';
+import { authClient } from '@/utils/auth-client';
 
-export default function Login() {
+export default async function Login() {
+  const session = await authClient.getSession({
+    fetchOptions: {
+      headers: await headers(),
+    },
+  });
+
+  if (session.data) {
+    redirect('/');
+  }
+
   return (
     <main className="flex w-[1000px] items-center justify-center rounded-lg bg-[#fff] py-5">
       <header className="h-[450px] w-[500px] flex-col items-center p-10">
@@ -65,22 +78,8 @@ export default function Login() {
           </form>
         </div>
         <Row />
-        <div className="flex w-full flex-col gap-5">
-          <button
-            className="flex cursor-pointer items-center justify-center gap-2 rounded-md bg-[#EA4335] py-2 font-bold text-white"
-            type="button"
-          >
-            <FaGoogle size={24} />
-            Continuar com Google
-          </button>
-          <button
-            className="flex cursor-pointer items-center justify-center gap-2 rounded-md bg-[#1877f2] py-2 font-bold text-white"
-            type="button"
-          >
-            <FaFacebook size={24} />
-            Continuar com Facebook
-          </button>
-        </div>
+
+        <SocialLoginComponent />
       </section>
     </main>
   );

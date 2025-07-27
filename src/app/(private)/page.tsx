@@ -8,11 +8,14 @@ export default async function Home() {
     },
   });
 
-  console.log('Session:', session);
-
   if (!session.data) {
     redirect('/login');
   }
 
-  return <div>Home</div>;
+  return (
+    <div>
+      <h1>Home</h1>
+      <p>Bem vindo {session.data.user.name}</p>
+    </div>
+  );
 }
